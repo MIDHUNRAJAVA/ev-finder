@@ -1,6 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import './Admin.css';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
+import DOMPurify from 'dompurify';
+
+// Helper function to sanitize text content
+const sanitizeText = (text) => {
+  if (!text) return '';
+  return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+};
+
+// Helper function to get safe status class name
+const getStatusClassName = (status) => {
+  const validStatuses = ['pending', 'accepted', 'declined'];
+  const sanitizedStatus = status ? status.toLowerCase().trim() : '';
+  return validStatuses.includes(sanitizedStatus) ? sanitizedStatus : 'pending';
+};
 
 const Admin = () => {
   const [bookings, setBookings] = useState([]);
@@ -65,10 +79,10 @@ const Admin = () => {
             {bookings.map((booking, index) => (
               <tr key={booking._id}>
                 <td>{index + 1}</td>
-                <td>{booking.name}<br />({booking.staffId}) </td>
-                <td>{booking.date}<br />{booking.time} </td>
-                <td>{booking.source}</td>
-                <td>{booking.destination}</td>
+                <td>{sanitizeText(booking.name)}<br />({sanitizeText(booking.staffId)}) </td>
+                <td>{sanitizeText(booking.date)}<br />{sanitizeText(booking.time)} </td>
+                <td>{sanitizeText(booking.source)}</td>
+                <td>{sanitizeText(booking.destination)}</td>
                 <td>
                   {booking.status === 'Pending' ? (
                     <>
@@ -82,8 +96,8 @@ const Admin = () => {
                       />
                     </>
                   ) : (
-                    <span className={booking.status.toLowerCase()}>
-                      {booking.status}
+                    <span className={getStatusClassName(booking.status)}>
+                      {sanitizeText(booking.status)}
                     </span>
                   )}
                 </td>
