@@ -4,21 +4,21 @@ import { BookingContext } from './context/BookingContext';
 import Navbar from './Navbar';
 import DOMPurify from 'dompurify';
 
+// Helper function to sanitize text content
+const sanitizeText = (text) => {
+    if (!text) return '';
+    return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+};
+
+// Helper function to get safe status class name
+const getStatusClassName = (status) => {
+    const validStatuses = ['pending', 'accepted', 'declined'];
+    const sanitizedStatus = status ? status.toLowerCase().trim() : '';
+    return validStatuses.includes(sanitizedStatus) ? sanitizedStatus : 'pending';
+};
+
 const BookingHistory = () => {
     const { bookings } = useContext(BookingContext);
-
-    // Helper function to sanitize text content
-    const sanitizeText = (text) => {
-        if (!text) return '';
-        return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
-    };
-
-    // Helper function to get safe status class name
-    const getStatusClassName = (status) => {
-        const validStatuses = ['pending', 'accepted', 'declined'];
-        const sanitizedStatus = status ? status.toLowerCase().trim() : '';
-        return validStatuses.includes(sanitizedStatus) ? sanitizedStatus : 'pending';
-    };
 
     return (
         <>

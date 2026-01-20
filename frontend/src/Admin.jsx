@@ -3,21 +3,21 @@ import './Admin.css';
 import { FaCheckCircle, FaTimesCircle } from 'react-icons/fa';
 import DOMPurify from 'dompurify';
 
+// Helper function to sanitize text content
+const sanitizeText = (text) => {
+  if (!text) return '';
+  return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
+};
+
+// Helper function to get safe status class name
+const getStatusClassName = (status) => {
+  const validStatuses = ['pending', 'accepted', 'declined'];
+  const sanitizedStatus = status ? status.toLowerCase().trim() : '';
+  return validStatuses.includes(sanitizedStatus) ? sanitizedStatus : 'pending';
+};
+
 const Admin = () => {
   const [bookings, setBookings] = useState([]);
-
-  // Helper function to sanitize text content
-  const sanitizeText = (text) => {
-    if (!text) return '';
-    return DOMPurify.sanitize(text, { ALLOWED_TAGS: [] });
-  };
-
-  // Helper function to get safe status class name
-  const getStatusClassName = (status) => {
-    const validStatuses = ['pending', 'accepted', 'declined'];
-    const sanitizedStatus = status ? status.toLowerCase().trim() : '';
-    return validStatuses.includes(sanitizedStatus) ? sanitizedStatus : 'pending';
-  };
 
   // Fetch data from the database
   useEffect(() => {
